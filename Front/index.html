@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimulaLarCred</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // Função para avançar entre as etapas
+    function nextStep(nextStepId) {
+        const steps = document.querySelectorAll('.content');
+        steps.forEach(step => step.classList.add('hidden')); // Esconde todas as etapas
+        document.getElementById(nextStepId).classList.remove('hidden'); // Mostra a próxima etapa
+    }
+
+    async function enviarDados() {
+        const nome = document.getElementById('nome').value;
+        const tipoPessoa = document.querySelector('input[name="tipo_pessoa"]:checked')?.value;
+        const tipoImovel = document.querySelector('input[name="tipo_imovel"]:checked')?.value;
+        const valorImovel = document.getElementById('valor').value;
+        const localizacao = document.querySelector('.localizacao').value;
+
+        const dados = {
+            nome,
+            tipoPessoa,
+            tipoImovel,
+            valorImovel,
+            localizacao
+        };
+
+        try {
+            const response = await fetch('http://localhost:5000/api/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            });
+
+            if (response.ok) {
+                alert('✅ Dados enviados com sucesso!');
+                nextStep('step3'); // Avança para a etapa 3 após sucesso
+            } else {
+                alert('❌ Erro ao enviar dados!');
+            }
+        } catch (error) {
+            console.error('Erro na requisição:', error);
+            alert('❌ Erro ao conectar ao servidor!');
+        }
+    }
+
+    // Chama a função ao clicar no botão da primeira etapa
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('#step1 .button').addEventListener('click', (e) => {
+            e.preventDefault();
+            nextStep('step2'); // Vai para a etapa 2
+        });
+
+        // Botão da etapa 2 que envia os dados e avança
+        document.querySelector('#step2 .button').addEventListener('click', (e) => {
+            e.preventDefault();
+            enviarDados();
+        });
+    });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="img/Captura de tela 2025-02-19 002856.png" alt="">
+            <h1>SimulaLarCred</h1>
+        </div>
+        
+        <div class="content" id="step1">
+            <p>Efetue uma simulação de financiamento ou empréstimo e obtenha informações previstas sobre prazos e condições. Em <br> seguida, dirija-se a um Parceiro Autorizado para finalizar o procedimento e ter acesso ao seu crédito.</p>
+            <h1>1️⃣ Dados iniciais</h1>
+            <h2>Financiamento para pessoa:</h2>
+            <div class="radio-group">
+                <label for="nome">Nome</label> <input type="text" id="nome">
+                <br><br>
+                <input type="radio" id="fisica" name="tipo_pessoa" value="Física">
+                <label for="fisica">Física</label>
+                <br><br>
+                <input type="radio" id="juridica" name="tipo_pessoa" value="Jurídica">
+                <label for="juridica">Jurídica</label>
+            </div>
+            <br><br><br>
+            <button class="button" onclick="nextStep('step2')">Próxima etapa</button>
+        </div>
+        
+        <div class="content hidden" id="step2">
+            <h2>2️⃣ Detalhes do imóvel</h2>
+            <p>Tipo de imóvel:</p>
+            <div class="radio-group">
+                <input type="radio" id="apartamento" name="tipo_imovel" value="Apartamento">
+                <label for="apartamento">Apartamento</label>
+                <br><br>
+                <input type="radio" id="casa" name="tipo_imovel" value="Casa">
+                <label for="casa">Casa</label><br>
+            </div>
+            <div class="form-group">
+                <h2>Valor aproximado do imóvel:</h2>
+                <input type="text" id="valor" placeholder="0,00">
+            </div>
+            <div class="form-group2">
+                <h2>Onde está localizado o imóvel:</h2>
+                <select class="localizacao">
+                    <option>Amapá</option>
+                    <option>São Paulo</option>
+                    <option>Rio de Janeiro</option>
+                    <option>Minas Gerais</option>
+                </select>
+            </div>
+            <button class="button" onclick="enviarDados()">Próxima etapa</button>
+        </div>
+
+        <div class="content hidden" id="step3">
+            <h2>3️⃣ Simulação</h2>
+            <p><a href="https://www.meuhabitat.com/MeuHabitatProgramadeFinanciamentoResidencial">MeuHabitat - Programa de Financiamento Residencial</a></p>
+            <p><a href="https://www.larplanejado.com">Lar Planejado</a></p>
+            <p><a href="https://www.moradiasegura.com">Moradia Segura</a></p>
+            <p><a href="https://www.apoiocasa.com">Apoio Casa</a></p>
+            <h3>GRÁFICOS COMPARATIVOS</h3>
+            <div class="charts">
+                <img src="img/Captura de tela 2025-02-19 011242.png" alt="Gráfico 1">
+                <img src="img/Captura de tela 2025-02-19 011545.png" alt="Gráfico 2">
+                <img src="img/Captura de tela 2025-02-19 011251.png" alt="Gráfico 3">
+            </div>
+            <button class="button" onclick="nextStep('step4')">Finalizar simulação</button>
+        </div>
+        
+        <div class="content hidden" id="step4">
+            <h2>4️⃣ Resultados</h2>
+            <p><strong>MeuHabitat - Programa de Financiamento Residencial</strong></p>
+            <p>Valor do imóvel: 400.000</p>
+            <p>Prazo máximo: 390 meses</p>
+            <p>Limite máximo do financiamento: 70%</p>
+            <p>Valor da entrada: 155.746,10</p>
+            <p>Valor do financiamento: 355.862,90</p>
+            <button class="button" onclick="nextStep('step3')">Voltar à etapa anterior</button>
+            <button class="button">Veja a documentação</button>
+            <span class="link" onclick="nextStep('step1')">Refazer simulação</span>
+        </div>
+        
+        <div class="sidebar"></div>
+    </div>
+</body>
+</html>
